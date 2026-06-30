@@ -568,23 +568,21 @@
       }
       if (!focus) focus = DAYS[DAYS.length - 1];
 
-      // Per-day status badges.
-      DAYS.forEach(function (dd) {
-        var sec = document.getElementById("day-" + dd.idx);
-        if (!sec) return;
-        var badge = sec.querySelector(".day__status");
-        if (!badge) return;
-        var label, cls;
-        if (dd.iso === today) { label = "Сегодня"; cls = "is-today"; }
-        else if (dd.iso < today) { label = "Завершено"; cls = "is-past"; }
-        else { label = "Скоро"; cls = "is-upcoming"; }
-        badge.textContent = label;
-        badge.className = "day__status " + cls;
-        badge.hidden = false;
-      });
-
+      // Mark the current day and show a status badge on it only.
       var cur = document.getElementById("day-" + focus.idx);
-      if (cur) cur.classList.add("is-current");
+      if (cur) {
+        cur.classList.add("is-current");
+        var badge = cur.querySelector(".day__status");
+        if (badge) {
+          var label, cls;
+          if (focus.iso === today) { label = "Сегодня"; cls = "is-today"; }
+          else if (focus.iso > today) { label = "Скоро"; cls = "is-upcoming"; }
+          else { label = "Завершено"; cls = "is-past"; }
+          badge.textContent = label;
+          badge.className = "day__status " + cls;
+          badge.hidden = false;
+        }
+      }
 
       // Match the sticky offset to the real header height.
       var sh = document.querySelector(".site-header");
