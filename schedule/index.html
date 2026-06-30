@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Расписание интенсива · Тбилиси · 2026</title>
+  <meta name="description" content="Расписание методического интенсива для учителей: 7 занятий, 6–16 июля 2026, Тбилиси. Время по Тбилиси.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://example.com/schedule/">
+
+  <!-- Bump ?v=… when styles.css changes, to defeat browser cache -->
+  <link rel="stylesheet" href="../styles.css?v=2026-06-05-1">
+
+  <style>
+    /* ---- Schedule page (scoped) ---- */
+    .sched-hero {
+      padding: clamp(2.25rem, 6vw, 3.5rem) 0 clamp(1.5rem, 4vw, 2rem);
+    }
+    .sched-hero__title {
+      font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
+      line-height: 1.08;
+      margin: 0.5rem 0 0.75rem;
+    }
+    .sched-hero__sub {
+      font-family: var(--font-mono);
+      font-size: 0.9375rem;
+      letter-spacing: 0.02em;
+      color: var(--ink);
+      margin: 0 0 1rem;
+    }
+    .sched-hero__note {
+      font-size: 0.9375rem;
+      color: var(--ink-muted);
+      max-width: 60ch;
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    .schedule { padding-bottom: clamp(3rem, 8vw, 5rem); }
+
+    /* Hidden radios drive the tabs/panels with zero JS */
+    .day-radio {
+      position: absolute;
+      width: 1px; height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Day navigation (horizontally scrollable on mobile) */
+    .day-nav {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch;
+      padding: 0.25rem 0 1.25rem;
+      margin: 0 calc(-1 * var(--side-pad));
+      padding-left: var(--side-pad);
+      padding-right: var(--side-pad);
+      scrollbar-width: thin;
+    }
+    .day-tab {
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.1rem;
+      min-width: 4.25rem;
+      padding: 0.6rem 0.75rem;
+      background: var(--bg-alt);
+      border: 1px solid var(--rule);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+    .day-tab__dow {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+    }
+    .day-tab__date {
+      font-family: var(--font-serif);
+      font-size: 1.0625rem;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .day-tab:hover { border-color: var(--accent); }
+    #day-0:checked ~ .day-nav .day-tab[for="day-0"],
+    #day-1:checked ~ .day-nav .day-tab[for="day-1"],
+    #day-2:checked ~ .day-nav .day-tab[for="day-2"],
+    #day-3:checked ~ .day-nav .day-tab[for="day-3"],
+    #day-4:checked ~ .day-nav .day-tab[for="day-4"],
+    #day-5:checked ~ .day-nav .day-tab[for="day-5"],
+    #day-6:checked ~ .day-nav .day-tab[for="day-6"] {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    #day-0:checked ~ .day-nav .day-tab[for="day-0"] .day-tab__dow,
+    #day-0:checked ~ .day-nav .day-tab[for="day-0"] .day-tab__date,
+    #day-1:checked ~ .day-nav .day-tab[for="day-1"] .day-tab__dow,
+    #day-1:checked ~ .day-nav .day-tab[for="day-1"] .day-tab__date,
+    #day-2:checked ~ .day-nav .day-tab[for="day-2"] .day-tab__dow,
+    #day-2:checked ~ .day-nav .day-tab[for="day-2"] .day-tab__date,
+    #day-3:checked ~ .day-nav .day-tab[for="day-3"] .day-tab__dow,
+    #day-3:checked ~ .day-nav .day-tab[for="day-3"] .day-tab__date,
+    #day-4:checked ~ .day-nav .day-tab[for="day-4"] .day-tab__dow,
+    #day-4:checked ~ .day-nav .day-tab[for="day-4"] .day-tab__date,
+    #day-5:checked ~ .day-nav .day-tab[for="day-5"] .day-tab__dow,
+    #day-5:checked ~ .day-nav .day-tab[for="day-5"] .day-tab__date,
+    #day-6:checked ~ .day-nav .day-tab[for="day-6"] .day-tab__dow,
+    #day-6:checked ~ .day-nav .day-tab[for="day-6"] .day-tab__date {
+      color: var(--on-accent);
+    }
+    #day-0:focus-visible ~ .day-nav .day-tab[for="day-0"],
+    #day-1:focus-visible ~ .day-nav .day-tab[for="day-1"],
+    #day-2:focus-visible ~ .day-nav .day-tab[for="day-2"],
+    #day-3:focus-visible ~ .day-nav .day-tab[for="day-3"],
+    #day-4:focus-visible ~ .day-nav .day-tab[for="day-4"],
+    #day-5:focus-visible ~ .day-nav .day-tab[for="day-5"],
+    #day-6:focus-visible ~ .day-nav .day-tab[for="day-6"] {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* Day panels */
+    .day { display: none; }
+    #day-0:checked ~ .day-panels .day[data-day="0"] { display: block; }
+    #day-1:checked ~ .day-panels .day[data-day="1"] { display: block; }
+    #day-2:checked ~ .day-panels .day[data-day="2"] { display: block; }
+    #day-3:checked ~ .day-panels .day[data-day="3"] { display: block; }
+    #day-4:checked ~ .day-panels .day[data-day="4"] { display: block; }
+    #day-5:checked ~ .day-panels .day[data-day="5"] { display: block; }
+    #day-6:checked ~ .day-panels .day[data-day="6"] { display: block; }
+
+    .day__head {
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--rule);
+    }
+    .day__kicker {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin: 0 0 0.4rem;
+    }
+    .day__title {
+      font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.125rem);
+      line-height: 1.15;
+      margin: 0 0 0.5rem;
+    }
+    .day__window {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      letter-spacing: 0.02em;
+      color: var(--ink-muted);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .day__status {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid currentColor;
+    }
+    .day__status.is-today { color: var(--accent); background: var(--accent-soft); border-color: transparent; }
+    .day__status.is-upcoming { color: var(--ink-muted); }
+    .day__status.is-past { color: var(--ink-muted); opacity: 0.7; }
+
+    /* Pairs + sessions */
+    .pair { margin: 0; }
+    .pair__head {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin: 0 0 0.5rem;
+    }
+    .pair__label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+    }
+    .pair__time {
+      font-family: var(--font-serif);
+      font-size: 1.0625rem;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .sessions {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid var(--rule);
+    }
+    .session {
+      margin: 0;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .session__title {
+      margin: 0 0 0.35rem;
+      font-size: 1.0625rem;
+      line-height: 1.4;
+      color: var(--ink);
+    }
+    .session__by { margin: 0; }
+
+    .tag {
+      display: inline-block;
+      vertical-align: middle;
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.1rem 0.45rem;
+      margin-left: 0.25rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .tag--online { background: var(--accent); color: var(--on-accent); }
+    .tag--cont { background: var(--bg-deep); color: var(--ink); }
+
+    .pair-break {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+    }
+    .pair-break::before, .pair-break::after {
+      content: "";
+      flex: 1;
+      border-top: 1px dashed var(--rule);
+    }
+
+    /* Speaker button -> popover */
+    .speaker {
+      font: inherit;
+      background: none;
+      border: 0;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      color: var(--accent);
+      font-weight: 500;
+      border-bottom: 1px dashed currentColor;
+      transition: color 0.15s ease;
+    }
+    .speaker::after {
+      content: "ⓘ";
+      font-size: 0.8em;
+      margin-left: 0.2em;
+      opacity: 0.75;
+      border: 0;
+    }
+    .speaker:hover, .speaker:focus-visible { color: var(--accent-hover); }
+
+    /* Popover (native, works without JS) */
+    .popover {
+      width: min(92vw, 23rem);
+      max-height: 80vh;
+      overflow: auto;
+      margin: auto;
+      padding: 1.75rem 1.5rem 1.5rem;
+      background: var(--bg);
+      color: var(--ink);
+      border: 1px solid var(--rule);
+      box-shadow: 0 24px 64px rgba(31, 24, 22, 0.28);
+    }
+    .popover::backdrop {
+      background: rgba(31, 24, 22, 0.45);
+      -webkit-backdrop-filter: blur(2px);
+      backdrop-filter: blur(2px);
+    }
+    .popover__close {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.6rem;
+      background: none;
+      border: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+      color: var(--ink-muted);
+      cursor: pointer;
+      padding: 0.25rem 0.4rem;
+    }
+    .popover__close:hover, .popover__close:focus-visible { color: var(--ink); }
+    .popover { position: fixed; }
+    .popover__name {
+      font-family: var(--font-serif);
+      font-size: 1.375rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      margin: 0 0 0.25rem;
+      padding-right: 1.5rem;
+    }
+    .popover__role {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin: 0 0 0.75rem;
+    }
+    .popover__bio {
+      font-size: 0.9375rem;
+      line-height: 1.55;
+      color: var(--ink-muted);
+      margin: 0;
+    }
+    .popover__link { margin: 0.75rem 0 0; }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .popover:popover-open { animation: pop-in 0.16s ease; }
+      @keyframes pop-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    }
+
+    @media (max-width: 720px) {
+      .session__title { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
+
+  <header class="site-header" id="top">
+    <div class="container site-header__inner">
+      <!-- TODO: replace "Фонд" with the real fund name -->
+      <a class="brand" href="../" aria-label="На главную">Фонд</a>
+      <nav class="site-nav" aria-label="Навигация">
+        <a class="site-nav__link" href="../#program">Программа</a>
+        <a class="site-nav__link" href="../#team">Команда</a>
+        <a class="btn btn--ghost" href="../">← На главную</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container">
+      <section class="sched-hero" aria-labelledby="sched-title">
+        <p class="section-label">Интенсив · 6–16 июля 2026</p>
+        <h1 class="sched-hero__title" id="sched-title">Расписание занятий</h1>
+        <p class="sched-hero__sub">7 занятий · 2 недели · Тбилиси</p>
+        <p class="sched-hero__note">
+          Время указано по&nbsp;Тбилиси. Очные занятия проходят в&nbsp;школе «Проектор»;
+          занятия с&nbsp;пометкой «Онлайн» — по&nbsp;видеосвязи. Выберите день, чтобы увидеть программу,
+          и&nbsp;нажмите на&nbsp;имя ведущего, чтобы узнать о&nbsp;нём подробнее.
+        </p>
+      </section>
+
+      <div class="schedule">
+      <input class="day-radio" type="radio" name="day" id="day-0" checked>
+      <input class="day-radio" type="radio" name="day" id="day-1">
+      <input class="day-radio" type="radio" name="day" id="day-2">
+      <input class="day-radio" type="radio" name="day" id="day-3">
+      <input class="day-radio" type="radio" name="day" id="day-4">
+      <input class="day-radio" type="radio" name="day" id="day-5">
+      <input class="day-radio" type="radio" name="day" id="day-6">
+
+        <nav class="day-nav" aria-label="Дни занятий">
+        <label class="day-tab" for="day-0"><span class="day-tab__dow">Пн</span><span class="day-tab__date">6.07</span></label>
+        <label class="day-tab" for="day-1"><span class="day-tab__dow">Ср</span><span class="day-tab__date">8.07</span></label>
+        <label class="day-tab" for="day-2"><span class="day-tab__dow">Чт</span><span class="day-tab__date">9.07</span></label>
+        <label class="day-tab" for="day-3"><span class="day-tab__dow">Сб</span><span class="day-tab__date">11.07</span></label>
+        <label class="day-tab" for="day-4"><span class="day-tab__dow">Пн</span><span class="day-tab__date">13.07</span></label>
+        <label class="day-tab" for="day-5"><span class="day-tab__dow">Вт</span><span class="day-tab__date">14.07</span></label>
+        <label class="day-tab" for="day-6"><span class="day-tab__dow">Чт</span><span class="day-tab__date">16.07</span></label>
+        </nav>
+
+        <div class="day-panels">
+    <article class="day" data-day="0" aria-labelledby="day-0-title">
+      <header class="day__head">
+        <p class="day__kicker">Неделя 1 · Занятие 1 из 7</p>
+        <h2 class="day__title" id="day-0-title">Понедельник, 6 июля</h2>
+        <p class="day__window">17:30–20:30 · Тбилиси <span class="day__status" hidden></span></p>
+      </header>
+      <div class="pair">
+        <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+        <ul class="sessions">
+          <li class="session">
+            <p class="session__title">Вводное занятие. Цели курса, знакомство с участниками</p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-vlad" aria-label="Подробнее: Влад Степанов">Влад Степанов</button></p>
+          </li>
+          <li class="session">
+            <p class="session__title">Школа как общественный институт. Роль школы в общественном устройстве. Краткая история школьного образования. Гуманистические и негуманистические подходы к организации образования.</p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-ilya" aria-label="Подробнее: Илья Заславский">Илья Заславский</button></p>
+          </li>
+        </ul>
+      </div>
+      <p class="pair-break"><span>Перерыв · 15 мин</span></p>
+      <div class="pair">
+        <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:30</span></p>
+        <ul class="sessions">
+          <li class="session">
+            <p class="session__title">Школа как общественный институт <span class="tag tag--cont">продолжение</span></p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-ilya" aria-label="Подробнее: Илья Заславский">Илья Заславский</button></p>
+          </li>
+          <li class="session">
+            <p class="session__title">Оффлайн-общение, более плотное знакомство участников между собой</p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
+          </li>
+        </ul>
+      </div>
+    </article>
+    <article class="day" data-day="1" aria-labelledby="day-1-title">
+      <header class="day__head">
+        <p class="day__kicker">Неделя 1 · Занятие 2 из 7</p>
+        <h2 class="day__title" id="day-1-title">Среда, 8 июля</h2>
+        <p class="day__window">17:30–20:30 · Тбилиси <span class="day__status" hidden></span></p>
+      </header>
+      <div class="pair">
+        <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+        <ul class="sessions">
+          <li class="session">
+            <p class="session__title">Математика. Исследование, часть 1 <span class="tag tag--online">Онлайн</span></p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
+          </li>
+          <li class="session">
+            <p class="session__title">Математика. Исследование, часть 2 <span class="tag tag--online">Онлайн</span></p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
+          </li>
+        </ul>
+      </div>
+      <p class="pair-break"><span>Перерыв · 15 мин</span></p>
+      <div class="pair">
+        <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:30</span></p>
+        <ul class="sessions">
+          <li class="session">
+            <p class="session__title">Математика. Рефлексия и обсуждение <span class="tag tag--online">Онлайн</span></p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
+          </li>
+        </ul>
+      </div>
+    </article>
+    <article class="day" data-day="2" aria-labelledby="day-2-title">
+      <header class="day__head">
+        <p class="day__kicker">Неделя 1 · Занятие 3 из 7</p>
+        <h2 class="day__title" id="day-2-title">Четверг, 9 июля</h2>
+        <p class="day__window">17:30–20:30 · Тбилиси <span class="day__status" hidden></span></p>
+      </header>
+      <div class="pair">
+        <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+        <ul class="sessions">
+          <li class="session">
+            <p class="session__title">Биология. Исследование</p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
+          </li>
+        </ul>
+      </div>
+      <p class="pair-break"><span>Перерыв · 15 мин</span></p>
+      <div class="pair">
+        <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:30</span></p>
+        <ul class="sessions">
+          <li class="session">
+            <p class="session__title">Биология. Рефлексия и обсуждение</p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
+          </li>
+        </ul>
+      </div>
+    </article>
+    <article class="day" data-day="3" aria-labelledby="day-3-title">
+      <header class="day__head">
+        <p class="day__kicker">Неделя 1 · Занятие 4 из 7</p>
+        <h2 class="day__title" id="day-3-title">Суббота, 11 июля</h2>
+        <p class="day__window">12:30–15:00 · Тбилиси <span class="day__status" hidden></span></p>
+      </header>
+      <div class="pair">
+        <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">12:30–14:00</span></p>
+        <ul class="sessions">
+          <li class="session">
+            <p class="session__title">Лингвистика. Исследование</p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-boris" aria-label="Подробнее: Борис Иомдин">Борис Иомдин</button></p>
+          </li>
+        </ul>
+      </div>
+      <p class="pair-break"><span>Перерыв · 15 мин</span></p>
+      <div class="pair">
+        <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">14:15–15:00</span></p>
+        <ul class="sessions">
+          <li class="session">
+            <p class="session__title">Лингвистика. Рефлексия и обсуждение</p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-boris" aria-label="Подробнее: Борис Иомдин">Борис Иомдин</button></p>
+          </li>
+        </ul>
+      </div>
+    </article>
+    <article class="day" data-day="4" aria-labelledby="day-4-title">
+      <header class="day__head">
+        <p class="day__kicker">Неделя 2 · Занятие 5 из 7</p>
+        <h2 class="day__title" id="day-4-title">Понедельник, 13 июля</h2>
+        <p class="day__window">17:30–20:30 · Тбилиси <span class="day__status" hidden></span></p>
+      </header>
+      <div class="pair">
+        <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+        <ul class="sessions">
+          <li class="session">
+            <p class="session__title">Ученик как субъект учебного процесса. Субъект-субъектный подход к обучению. Современные вызовы школьного образования. Учебная деятельность.</p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-ilya" aria-label="Подробнее: Илья Заславский">Илья Заславский</button></p>
+          </li>
+          <li class="session">
+            <p class="session__title">Психологический аспект организации исследовательской деятельности. Психологические особенности учащихся 8–12 лет</p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
+          </li>
+        </ul>
+      </div>
+      <p class="pair-break"><span>Перерыв · 15 мин</span></p>
+      <div class="pair">
+        <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:30</span></p>
+        <ul class="sessions">
+          <li class="session">
+            <p class="session__title">Психологический аспект исследовательской деятельности <span class="tag tag--cont">продолжение</span></p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
+          </li>
+        </ul>
+      </div>
+    </article>
+    <article class="day" data-day="5" aria-labelledby="day-5-title">
+      <header class="day__head">
+        <p class="day__kicker">Неделя 2 · Занятие 6 из 7</p>
+        <h2 class="day__title" id="day-5-title">Вторник, 14 июля</h2>
+        <p class="day__window">17:30–20:30 · Тбилиси <span class="day__status" hidden></span></p>
+      </header>
+      <div class="pair">
+        <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+        <ul class="sessions">
+          <li class="session">
+            <p class="session__title">Исследовательские математические задачи (и не только) <span class="tag tag--online">Онлайн</span></p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
+          </li>
+        </ul>
+      </div>
+      <p class="pair-break"><span>Перерыв · 15 мин</span></p>
+      <div class="pair">
+        <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:30</span></p>
+        <ul class="sessions">
+          <li class="session">
+            <p class="session__title">Исследовательские математические задачи <span class="tag tag--online">Онлайн</span><span class="tag tag--cont">продолжение</span></p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
+          </li>
+        </ul>
+      </div>
+    </article>
+    <article class="day" data-day="6" aria-labelledby="day-6-title">
+      <header class="day__head">
+        <p class="day__kicker">Неделя 2 · Занятие 7 из 7</p>
+        <h2 class="day__title" id="day-6-title">Четверг, 16 июля</h2>
+        <p class="day__window">17:30–20:30 · Тбилиси <span class="day__status" hidden></span></p>
+      </header>
+      <div class="pair">
+        <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+        <ul class="sessions">
+          <li class="session">
+            <p class="session__title">Учитель и его роль в школе. Педагог и стимул. Стейкхолдеры учебного процесса. Эволюция роли учителя. Профессиональные требования к учителю. Выбор содержания образования. Работа с учебными материалами.</p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-ilya" aria-label="Подробнее: Илья Заславский">Илья Заславский</button></p>
+          </li>
+          <li class="session">
+            <p class="session__title">Технологии и отвага</p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-vlad" aria-label="Подробнее: Влад Степанов">Влад Степанов</button></p>
+          </li>
+        </ul>
+      </div>
+      <p class="pair-break"><span>Перерыв · 15 мин</span></p>
+      <div class="pair">
+        <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:30</span></p>
+        <ul class="sessions">
+          <li class="session">
+            <p class="session__title">Общая рефлексия</p>
+            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-vlad" aria-label="Подробнее: Влад Степанов">Влад Степанов</button></p>
+          </li>
+        </ul>
+      </div>
+    </article>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Speaker popovers -->
+    <div id="spk-vlad" class="popover" popover>
+      <button class="popover__close" type="button" popovertarget="spk-vlad" popovertargetaction="hide" aria-label="Закрыть">×</button>
+      <p class="popover__name">Влад Степанов</p>
+        <p class="popover__role">Руководитель фонда</p>
+      <p class="popover__bio">Бывший руководитель «Информатики» от Яндекса, CEO Gradarius. 13+&nbsp;лет в&nbsp;EdTech на&nbsp;рынках России, СНГ и&nbsp;США.</p>
+        <p class="popover__link"><a class="link" href="https://www.linkedin.com/in/utterstep/" target="_blank" rel="noopener">LinkedIn ↗</a></p>
+    </div>
+    <div id="spk-ilya" class="popover" popover>
+      <button class="popover__close" type="button" popovertarget="spk-ilya" popovertargetaction="hide" aria-label="Закрыть">×</button>
+      <p class="popover__name">Илья Заславский</p>
+        <p class="popover__role">История · геймификация</p>
+      <p class="popover__bio">Учитель истории, специалист по&nbsp;геймификации. В&nbsp;прошлом — эксперт по&nbsp;геймификации образования Института образования НИУ&nbsp;ВШЭ.</p>
+    </div>
+    <div id="spk-anton" class="popover" popover>
+      <button class="popover__close" type="button" popovertarget="spk-anton" popovertargetaction="hide" aria-label="Закрыть">×</button>
+      <p class="popover__name">Антон Захаров</p>
+        <p class="popover__role">Биология · «Проектор»</p>
+      <p class="popover__bio">Академический директор <a class="link" href="https://www.projector-school.ge/" target="_blank" rel="noopener">школы «Проектор»</a>. Физиолог поведения, популяризатор науки.</p>
+    </div>
+    <div id="spk-boris" class="popover" popover>
+      <button class="popover__close" type="button" popovertarget="spk-boris" popovertargetaction="hide" aria-label="Закрыть">×</button>
+      <p class="popover__name">Борис Иомдин</p>
+        <p class="popover__role">Лингвистика</p>
+      <p class="popover__bio">Лингвист. Автор курсов для детей и&nbsp;взрослых. Соавтор словарей, научных и&nbsp;популярных книг о&nbsp;языке и&nbsp;бестселлера «<span class="nowrap">36 подсвечников</span>. Шарады, шляпа и&nbsp;другие игры со&nbsp;словами».</p>
+    </div>
+    <div id="spk-yura" class="popover" popover>
+      <button class="popover__close" type="button" popovertarget="spk-yura" popovertargetaction="hide" aria-label="Закрыть">×</button>
+      <p class="popover__name">Юрий Подкопаев</p>
+        <p class="popover__role">Математика</p>
+      <p class="popover__bio">Автор и&nbsp;ведущий курсов по&nbsp;математике. Ранее — заместитель директора «Новой школы», лидер STEM-кафедры школы «Диалог».</p>
+    </div>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <!-- TODO: replace "Фонд" with the real fund name -->
+      <p>© 2026 Фонд · <a class="link" href="../">На главную</a></p>
+      <p><a class="link" href="mailto:utterstep@hey.com">utterstep@hey.com</a></p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var DAYS = [
+      { idx: 0, iso: "2026-07-06" },
+      { idx: 1, iso: "2026-07-08" },
+      { idx: 2, iso: "2026-07-09" },
+      { idx: 3, iso: "2026-07-11" },
+      { idx: 4, iso: "2026-07-13" },
+      { idx: 5, iso: "2026-07-14" },
+      { idx: 6, iso: "2026-07-16" }
+      ];
+      function todayISO() {
+        var d = new Date();
+        var p = function (n) { return (n < 10 ? "0" : "") + n; };
+        return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate());
+      }
+      var today = todayISO();
+
+      // Focus the current day, the next upcoming one, or (after the programme) the last.
+      var focus = null;
+      for (var i = 0; i < DAYS.length; i++) {
+        if (DAYS[i].iso >= today) { focus = DAYS[i]; break; }
+      }
+      if (!focus) focus = DAYS[DAYS.length - 1];
+
+      var radio = document.getElementById("day-" + focus.idx);
+      if (radio) radio.checked = true;
+
+      // Per-day status badge.
+      DAYS.forEach(function (dd) {
+        var panel = document.querySelector('.day[data-day="' + dd.idx + '"]');
+        if (!panel) return;
+        var badge = panel.querySelector(".day__status");
+        if (!badge) return;
+        var label, cls;
+        if (dd.iso === today) { label = "Сегодня"; cls = "is-today"; }
+        else if (dd.iso < today) { label = "Завершено"; cls = "is-past"; }
+        else { label = "Скоро"; cls = "is-upcoming"; }
+        badge.textContent = label;
+        badge.className = "day__status " + cls;
+        badge.hidden = false;
+      });
+
+      // Bring the active tab into view inside the horizontal scroller.
+      var tab = document.querySelector('.day-tab[for="day-' + focus.idx + '"]');
+      if (tab && tab.scrollIntoView) {
+        try { tab.scrollIntoView({ inline: "center", block: "nearest" }); } catch (e) {}
+      }
+    })();
+  </script>
+</body>
+</html>
