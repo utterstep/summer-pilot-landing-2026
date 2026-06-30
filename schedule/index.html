@@ -13,8 +13,10 @@
 
   <style>
     /* ---- Schedule page (scoped) ---- */
+    :root { --site-h: 64px; }
+
     .sched-hero {
-      padding: clamp(2.25rem, 6vw, 3.5rem) 0 clamp(1.5rem, 4vw, 2rem);
+      padding: clamp(2.25rem, 6vw, 3.5rem) 0 clamp(1.25rem, 3vw, 1.75rem);
     }
     .sched-hero__title {
       font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
@@ -38,132 +40,63 @@
 
     .schedule { padding-bottom: clamp(3rem, 8vw, 5rem); }
 
-    /* Hidden radios drive the tabs/panels with zero JS */
-    .day-radio {
-      position: absolute;
-      width: 1px; height: 1px;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* Day navigation (horizontally scrollable on mobile) */
-    .day-nav {
-      display: flex;
-      gap: 0.5rem;
-      overflow-x: auto;
-      scroll-snap-type: x proximity;
-      -webkit-overflow-scrolling: touch;
-      padding: 0.25rem 0 1.25rem;
-      margin: 0 calc(-1 * var(--side-pad));
-      padding-left: var(--side-pad);
-      padding-right: var(--side-pad);
-      scrollbar-width: thin;
-    }
-    .day-tab {
-      flex: 0 0 auto;
-      scroll-snap-align: start;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.1rem;
-      min-width: 4.25rem;
-      padding: 0.6rem 0.75rem;
-      background: var(--bg-alt);
-      border: 1px solid var(--rule);
-      cursor: pointer;
-      user-select: none;
-      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-    }
-    .day-tab__dow {
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--ink-muted);
-    }
-    .day-tab__date {
-      font-family: var(--font-serif);
-      font-size: 1.0625rem;
-      font-weight: 500;
-      color: var(--ink);
-    }
-    .day-tab:hover { border-color: var(--accent); }
-    #day-0:checked ~ .day-nav .day-tab[for="day-0"],
-    #day-1:checked ~ .day-nav .day-tab[for="day-1"],
-    #day-2:checked ~ .day-nav .day-tab[for="day-2"],
-    #day-3:checked ~ .day-nav .day-tab[for="day-3"],
-    #day-4:checked ~ .day-nav .day-tab[for="day-4"],
-    #day-5:checked ~ .day-nav .day-tab[for="day-5"],
-    #day-6:checked ~ .day-nav .day-tab[for="day-6"] {
-      background: var(--accent);
-      border-color: var(--accent);
-    }
-
-    #day-0:checked ~ .day-nav .day-tab[for="day-0"] .day-tab__dow,
-    #day-0:checked ~ .day-nav .day-tab[for="day-0"] .day-tab__date,
-    #day-1:checked ~ .day-nav .day-tab[for="day-1"] .day-tab__dow,
-    #day-1:checked ~ .day-nav .day-tab[for="day-1"] .day-tab__date,
-    #day-2:checked ~ .day-nav .day-tab[for="day-2"] .day-tab__dow,
-    #day-2:checked ~ .day-nav .day-tab[for="day-2"] .day-tab__date,
-    #day-3:checked ~ .day-nav .day-tab[for="day-3"] .day-tab__dow,
-    #day-3:checked ~ .day-nav .day-tab[for="day-3"] .day-tab__date,
-    #day-4:checked ~ .day-nav .day-tab[for="day-4"] .day-tab__dow,
-    #day-4:checked ~ .day-nav .day-tab[for="day-4"] .day-tab__date,
-    #day-5:checked ~ .day-nav .day-tab[for="day-5"] .day-tab__dow,
-    #day-5:checked ~ .day-nav .day-tab[for="day-5"] .day-tab__date,
-    #day-6:checked ~ .day-nav .day-tab[for="day-6"] .day-tab__dow,
-    #day-6:checked ~ .day-nav .day-tab[for="day-6"] .day-tab__date {
-      color: var(--on-accent);
-    }
-    #day-0:focus-visible ~ .day-nav .day-tab[for="day-0"],
-    #day-1:focus-visible ~ .day-nav .day-tab[for="day-1"],
-    #day-2:focus-visible ~ .day-nav .day-tab[for="day-2"],
-    #day-3:focus-visible ~ .day-nav .day-tab[for="day-3"],
-    #day-4:focus-visible ~ .day-nav .day-tab[for="day-4"],
-    #day-5:focus-visible ~ .day-nav .day-tab[for="day-5"],
-    #day-6:focus-visible ~ .day-nav .day-tab[for="day-6"] {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }
-
-    /* Day panels */
-    .day { display: none; }
-    #day-0:checked ~ .day-panels .day[data-day="0"] { display: block; }
-    #day-1:checked ~ .day-panels .day[data-day="1"] { display: block; }
-    #day-2:checked ~ .day-panels .day[data-day="2"] { display: block; }
-    #day-3:checked ~ .day-panels .day[data-day="3"] { display: block; }
-    #day-4:checked ~ .day-panels .day[data-day="4"] { display: block; }
-    #day-5:checked ~ .day-panels .day[data-day="5"] { display: block; }
-    #day-6:checked ~ .day-panels .day[data-day="6"] { display: block; }
-
-    .day__head {
-      padding-bottom: 1.25rem;
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid var(--rule);
-    }
-    .day__kicker {
+    /* Week separator */
+    .week-label {
       font-family: var(--font-mono);
       font-size: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       color: var(--accent);
-      margin: 0 0 0.4rem;
+      margin: 2rem 0 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--rule);
+    }
+    .week-label:first-child { margin-top: 0.5rem; }
+
+    /* All days are visible; each day's header sticks while its day is in view */
+    .day {
+      display: block;
+      scroll-margin-top: var(--site-h);
+      padding-bottom: 1.75rem;
+      margin-bottom: 1.75rem;
+    }
+    .day:last-child { margin-bottom: 0; padding-bottom: 0; }
+
+    .day__head {
+      position: sticky;
+      top: var(--site-h);
+      z-index: 5;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.25rem 1rem;
+      padding: 0.75rem 0;
+      margin-bottom: 1rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--rule);
+    }
+    .day.is-current .day__head {
+      box-shadow: inset 3px 0 0 var(--accent);
+      padding-left: 0.85rem;
+      margin-left: -0.85rem;
     }
     .day__title {
-      font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.125rem);
+      font-size: clamp(1.375rem, 1.15rem + 1.1vw, 1.875rem);
       line-height: 1.15;
-      margin: 0 0 0.5rem;
+      margin: 0;
+    }
+    .day__meta {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin: 0;
     }
     .day__window {
       font-family: var(--font-mono);
       font-size: 0.875rem;
       letter-spacing: 0.02em;
       color: var(--ink-muted);
-      margin: 0;
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.5rem;
     }
     .day__status {
       font-family: var(--font-mono);
@@ -173,9 +106,10 @@
       padding: 0.15rem 0.55rem;
       border-radius: 999px;
       border: 1px solid currentColor;
+      white-space: nowrap;
     }
     .day__status.is-today { color: var(--accent); background: var(--accent-soft); border-color: transparent; }
-    .day__status.is-upcoming { color: var(--ink-muted); }
+    .day__status.is-upcoming { color: var(--accent); }
     .day__status.is-past { color: var(--ink-muted); opacity: 0.7; }
 
     /* Pairs + sessions */
@@ -229,9 +163,9 @@
       margin-left: 0.25rem;
       border-radius: 999px;
       white-space: nowrap;
+      background: var(--bg-deep);
+      color: var(--ink);
     }
-    .tag--online { background: var(--accent); color: var(--on-accent); }
-    .tag--cont { background: var(--bg-deep); color: var(--ink); }
 
     .pair-break {
       display: flex;
@@ -274,6 +208,7 @@
 
     /* Popover (native, works without JS) */
     .popover {
+      position: fixed;
       width: min(92vw, 23rem);
       max-height: 80vh;
       overflow: auto;
@@ -302,7 +237,6 @@
       padding: 0.25rem 0.4rem;
     }
     .popover__close:hover, .popover__close:focus-visible { color: var(--ink); }
-    .popover { position: fixed; }
     .popover__name {
       font-family: var(--font-serif);
       font-size: 1.375rem;
@@ -332,7 +266,8 @@
       @keyframes pop-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
     }
 
-    @media (max-width: 720px) {
+    @media (max-width: 480px) {
+      .day__head { flex-direction: column; align-items: flex-start; gap: 0.35rem; }
       .session__title { font-size: 1rem; }
     }
   </style>
@@ -359,235 +294,210 @@
         <h1 class="sched-hero__title" id="sched-title">Расписание занятий</h1>
         <p class="sched-hero__sub">7 занятий · 2 недели · Тбилиси</p>
         <p class="sched-hero__note">
-          Время указано по&nbsp;Тбилиси. Очные занятия проходят в&nbsp;школе «Проектор»;
-          занятия с&nbsp;пометкой «Онлайн» — по&nbsp;видеосвязи. Выберите день, чтобы увидеть программу,
-          и&nbsp;нажмите на&nbsp;имя ведущего, чтобы узнать о&nbsp;нём подробнее.
+          Время указано по&nbsp;Тбилиси. Очные занятия проходят в&nbsp;школе
+          <a class="link" href="https://maps.app.goo.gl/hXuxNuRaT9cfJFYAA" target="_blank" rel="noopener">«Проектор»</a>.
+          Нажмите на&nbsp;имя ведущего, чтобы узнать о&nbsp;нём подробнее.
         </p>
       </section>
 
       <div class="schedule">
-      <input class="day-radio" type="radio" name="day" id="day-0" checked>
-      <input class="day-radio" type="radio" name="day" id="day-1">
-      <input class="day-radio" type="radio" name="day" id="day-2">
-      <input class="day-radio" type="radio" name="day" id="day-3">
-      <input class="day-radio" type="radio" name="day" id="day-4">
-      <input class="day-radio" type="radio" name="day" id="day-5">
-      <input class="day-radio" type="radio" name="day" id="day-6">
-
-        <nav class="day-nav" aria-label="Дни занятий">
-        <label class="day-tab" for="day-0"><span class="day-tab__dow">Пн</span><span class="day-tab__date">6.07</span></label>
-        <label class="day-tab" for="day-1"><span class="day-tab__dow">Ср</span><span class="day-tab__date">8.07</span></label>
-        <label class="day-tab" for="day-2"><span class="day-tab__dow">Чт</span><span class="day-tab__date">9.07</span></label>
-        <label class="day-tab" for="day-3"><span class="day-tab__dow">Сб</span><span class="day-tab__date">11.07</span></label>
-        <label class="day-tab" for="day-4"><span class="day-tab__dow">Пн</span><span class="day-tab__date">13.07</span></label>
-        <label class="day-tab" for="day-5"><span class="day-tab__dow">Вт</span><span class="day-tab__date">14.07</span></label>
-        <label class="day-tab" for="day-6"><span class="day-tab__dow">Чт</span><span class="day-tab__date">16.07</span></label>
-        </nav>
-
-        <div class="day-panels">
-    <article class="day" data-day="0" aria-labelledby="day-0-title">
-      <header class="day__head">
-        <p class="day__kicker">Неделя 1 · Занятие 1 из 7</p>
-        <h2 class="day__title" id="day-0-title">Понедельник, 6 июля</h2>
-        <p class="day__window">17:30–20:00 · Тбилиси <span class="day__status" hidden></span></p>
-      </header>
-      <div class="pair">
-        <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
-        <ul class="sessions">
-          <li class="session">
-            <p class="session__title">Вводное занятие. Цели курса, знакомство с участниками</p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-vlad" aria-label="Подробнее: Влад Степанов">Влад Степанов</button></p>
-          </li>
-          <li class="session">
-            <p class="session__title">Школа как общественный институт. Роль школы в общественном устройстве. Краткая история школьного образования. Гуманистические и негуманистические подходы к организации образования.</p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-ilya" aria-label="Подробнее: Илья Заславский">Илья Заславский</button></p>
-          </li>
-        </ul>
-      </div>
-      <p class="pair-break"><span>Перерыв · 15 мин</span></p>
-      <div class="pair">
-        <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
-        <ul class="sessions">
-          <li class="session">
-            <p class="session__title">Школа как общественный институт <span class="tag tag--cont">продолжение</span></p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-ilya" aria-label="Подробнее: Илья Заславский">Илья Заславский</button></p>
-          </li>
-          <li class="session">
-            <p class="session__title">Оффлайн-общение, более плотное знакомство участников между собой</p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
-          </li>
-        </ul>
-      </div>
-    </article>
-    <article class="day" data-day="1" aria-labelledby="day-1-title">
-      <header class="day__head">
-        <p class="day__kicker">Неделя 1 · Занятие 2 из 7</p>
-        <h2 class="day__title" id="day-1-title">Среда, 8 июля</h2>
-        <p class="day__window">17:30–20:00 · Тбилиси <span class="day__status" hidden></span></p>
-      </header>
-      <div class="pair">
-        <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
-        <ul class="sessions">
-          <li class="session">
-            <p class="session__title">Математика. Исследование, часть 1 <span class="tag tag--online">Онлайн</span></p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
-          </li>
-          <li class="session">
-            <p class="session__title">Математика. Исследование, часть 2 <span class="tag tag--online">Онлайн</span></p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
-          </li>
-        </ul>
-      </div>
-      <p class="pair-break"><span>Перерыв · 15 мин</span></p>
-      <div class="pair">
-        <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
-        <ul class="sessions">
-          <li class="session">
-            <p class="session__title">Математика. Рефлексия и обсуждение <span class="tag tag--online">Онлайн</span></p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
-          </li>
-        </ul>
-      </div>
-    </article>
-    <article class="day" data-day="2" aria-labelledby="day-2-title">
-      <header class="day__head">
-        <p class="day__kicker">Неделя 1 · Занятие 3 из 7</p>
-        <h2 class="day__title" id="day-2-title">Четверг, 9 июля</h2>
-        <p class="day__window">17:30–20:00 · Тбилиси <span class="day__status" hidden></span></p>
-      </header>
-      <div class="pair">
-        <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
-        <ul class="sessions">
-          <li class="session">
-            <p class="session__title">Биология. Исследование</p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
-          </li>
-        </ul>
-      </div>
-      <p class="pair-break"><span>Перерыв · 15 мин</span></p>
-      <div class="pair">
-        <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
-        <ul class="sessions">
-          <li class="session">
-            <p class="session__title">Биология. Рефлексия и обсуждение</p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
-          </li>
-        </ul>
-      </div>
-    </article>
-    <article class="day" data-day="3" aria-labelledby="day-3-title">
-      <header class="day__head">
-        <p class="day__kicker">Неделя 1 · Занятие 4 из 7</p>
-        <h2 class="day__title" id="day-3-title">Суббота, 11 июля</h2>
-        <p class="day__window">12:30–15:00 · Тбилиси <span class="day__status" hidden></span></p>
-      </header>
-      <div class="pair">
-        <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">12:30–14:00</span></p>
-        <ul class="sessions">
-          <li class="session">
-            <p class="session__title">Лингвистика. Исследование</p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-boris" aria-label="Подробнее: Борис Иомдин">Борис Иомдин</button></p>
-          </li>
-        </ul>
-      </div>
-      <p class="pair-break"><span>Перерыв · 15 мин</span></p>
-      <div class="pair">
-        <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">14:15–15:00</span></p>
-        <ul class="sessions">
-          <li class="session">
-            <p class="session__title">Лингвистика. Рефлексия и обсуждение</p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-boris" aria-label="Подробнее: Борис Иомдин">Борис Иомдин</button></p>
-          </li>
-        </ul>
-      </div>
-    </article>
-    <article class="day" data-day="4" aria-labelledby="day-4-title">
-      <header class="day__head">
-        <p class="day__kicker">Неделя 2 · Занятие 5 из 7</p>
-        <h2 class="day__title" id="day-4-title">Понедельник, 13 июля</h2>
-        <p class="day__window">17:30–20:00 · Тбилиси <span class="day__status" hidden></span></p>
-      </header>
-      <div class="pair">
-        <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
-        <ul class="sessions">
-          <li class="session">
-            <p class="session__title">Ученик как субъект учебного процесса. Субъект-субъектный подход к обучению. Современные вызовы школьного образования. Учебная деятельность.</p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-ilya" aria-label="Подробнее: Илья Заславский">Илья Заславский</button></p>
-          </li>
-          <li class="session">
-            <p class="session__title">Психологический аспект организации исследовательской деятельности. Психологические особенности учащихся 8–12 лет</p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
-          </li>
-        </ul>
-      </div>
-      <p class="pair-break"><span>Перерыв · 15 мин</span></p>
-      <div class="pair">
-        <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
-        <ul class="sessions">
-          <li class="session">
-            <p class="session__title">Психологический аспект исследовательской деятельности <span class="tag tag--cont">продолжение</span></p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
-          </li>
-        </ul>
-      </div>
-    </article>
-    <article class="day" data-day="5" aria-labelledby="day-5-title">
-      <header class="day__head">
-        <p class="day__kicker">Неделя 2 · Занятие 6 из 7</p>
-        <h2 class="day__title" id="day-5-title">Вторник, 14 июля</h2>
-        <p class="day__window">17:30–20:00 · Тбилиси <span class="day__status" hidden></span></p>
-      </header>
-      <div class="pair">
-        <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
-        <ul class="sessions">
-          <li class="session">
-            <p class="session__title">Исследовательские математические задачи (и не только) <span class="tag tag--online">Онлайн</span></p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
-          </li>
-        </ul>
-      </div>
-      <p class="pair-break"><span>Перерыв · 15 мин</span></p>
-      <div class="pair">
-        <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
-        <ul class="sessions">
-          <li class="session">
-            <p class="session__title">Исследовательские математические задачи <span class="tag tag--online">Онлайн</span><span class="tag tag--cont">продолжение</span></p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
-          </li>
-        </ul>
-      </div>
-    </article>
-    <article class="day" data-day="6" aria-labelledby="day-6-title">
-      <header class="day__head">
-        <p class="day__kicker">Неделя 2 · Занятие 7 из 7</p>
-        <h2 class="day__title" id="day-6-title">Четверг, 16 июля</h2>
-        <p class="day__window">17:30–20:00 · Тбилиси <span class="day__status" hidden></span></p>
-      </header>
-      <div class="pair">
-        <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
-        <ul class="sessions">
-          <li class="session">
-            <p class="session__title">Учитель и его роль в школе. Педагог и стимул. Стейкхолдеры учебного процесса. Эволюция роли учителя. Профессиональные требования к учителю. Выбор содержания образования. Работа с учебными материалами.</p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-ilya" aria-label="Подробнее: Илья Заславский">Илья Заславский</button></p>
-          </li>
-          <li class="session">
-            <p class="session__title">Технологии и отвага</p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-vlad" aria-label="Подробнее: Влад Степанов">Влад Степанов</button></p>
-          </li>
-        </ul>
-      </div>
-      <p class="pair-break"><span>Перерыв · 15 мин</span></p>
-      <div class="pair">
-        <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
-        <ul class="sessions">
-          <li class="session">
-            <p class="session__title">Общая рефлексия</p>
-            <p class="session__by"><button class="speaker" type="button" popovertarget="spk-vlad" aria-label="Подробнее: Влад Степанов">Влад Степанов</button></p>
-          </li>
-        </ul>
-      </div>
-    </article>
+      <p class="week-label">Неделя 1</p>
+      <section class="day" id="day-0" data-iso="2026-07-06" aria-labelledby="day-0-title">
+        <header class="day__head">
+          <h2 class="day__title" id="day-0-title">Понедельник, 6 июля</h2>
+          <p class="day__meta"><span class="day__window">17:30–20:00</span><span class="day__status" hidden></span></p>
+        </header>
+        <div class="pair">
+          <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+          <ul class="sessions">
+            <li class="session">
+              <p class="session__title">Вводное занятие. Цели курса, знакомство с участниками</p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-vlad" aria-label="Подробнее: Влад Степанов">Влад Степанов</button></p>
+            </li>
+            <li class="session">
+              <p class="session__title">Школа как общественный институт. Роль школы в общественном устройстве. Краткая история школьного образования. Гуманистические и негуманистические подходы к организации образования.</p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-ilya" aria-label="Подробнее: Илья Заславский">Илья Заславский</button></p>
+            </li>
+          </ul>
         </div>
+        <p class="pair-break"><span>Перерыв · 15 мин</span></p>
+        <div class="pair">
+          <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
+          <ul class="sessions">
+            <li class="session">
+              <p class="session__title">Школа как общественный институт <span class="tag tag--cont">продолжение</span></p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-ilya" aria-label="Подробнее: Илья Заславский">Илья Заславский</button></p>
+            </li>
+            <li class="session">
+              <p class="session__title">Оффлайн-общение, более плотное знакомство участников между собой</p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section class="day" id="day-1" data-iso="2026-07-08" aria-labelledby="day-1-title">
+        <header class="day__head">
+          <h2 class="day__title" id="day-1-title">Среда, 8 июля</h2>
+          <p class="day__meta"><span class="day__window">17:30–20:00</span><span class="day__status" hidden></span></p>
+        </header>
+        <div class="pair">
+          <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+          <ul class="sessions">
+            <li class="session">
+              <p class="session__title">Математика. Исследование, часть 1</p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
+            </li>
+            <li class="session">
+              <p class="session__title">Математика. Исследование, часть 2</p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
+            </li>
+          </ul>
+        </div>
+        <p class="pair-break"><span>Перерыв · 15 мин</span></p>
+        <div class="pair">
+          <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
+          <ul class="sessions">
+            <li class="session">
+              <p class="session__title">Математика. Рефлексия и обсуждение</p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section class="day" id="day-2" data-iso="2026-07-09" aria-labelledby="day-2-title">
+        <header class="day__head">
+          <h2 class="day__title" id="day-2-title">Четверг, 9 июля</h2>
+          <p class="day__meta"><span class="day__window">17:30–20:00</span><span class="day__status" hidden></span></p>
+        </header>
+        <div class="pair">
+          <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+          <ul class="sessions">
+            <li class="session">
+              <p class="session__title">Биология. Исследование</p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
+            </li>
+          </ul>
+        </div>
+        <p class="pair-break"><span>Перерыв · 15 мин</span></p>
+        <div class="pair">
+          <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
+          <ul class="sessions">
+            <li class="session">
+              <p class="session__title">Биология. Рефлексия и обсуждение</p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section class="day" id="day-3" data-iso="2026-07-11" aria-labelledby="day-3-title">
+        <header class="day__head">
+          <h2 class="day__title" id="day-3-title">Суббота, 11 июля</h2>
+          <p class="day__meta"><span class="day__window">12:30–15:00</span><span class="day__status" hidden></span></p>
+        </header>
+        <div class="pair">
+          <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">12:30–14:00</span></p>
+          <ul class="sessions">
+            <li class="session">
+              <p class="session__title">Лингвистика. Исследование</p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-boris" aria-label="Подробнее: Борис Иомдин">Борис Иомдин</button></p>
+            </li>
+          </ul>
+        </div>
+        <p class="pair-break"><span>Перерыв · 15 мин</span></p>
+        <div class="pair">
+          <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">14:15–15:00</span></p>
+          <ul class="sessions">
+            <li class="session">
+              <p class="session__title">Лингвистика. Рефлексия и обсуждение</p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-boris" aria-label="Подробнее: Борис Иомдин">Борис Иомдин</button></p>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <p class="week-label">Неделя 2</p>
+      <section class="day" id="day-4" data-iso="2026-07-13" aria-labelledby="day-4-title">
+        <header class="day__head">
+          <h2 class="day__title" id="day-4-title">Понедельник, 13 июля</h2>
+          <p class="day__meta"><span class="day__window">17:30–20:00</span><span class="day__status" hidden></span></p>
+        </header>
+        <div class="pair">
+          <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+          <ul class="sessions">
+            <li class="session">
+              <p class="session__title">Ученик как субъект учебного процесса. Субъект-субъектный подход к обучению. Современные вызовы школьного образования. Учебная деятельность.</p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-ilya" aria-label="Подробнее: Илья Заславский">Илья Заславский</button></p>
+            </li>
+            <li class="session">
+              <p class="session__title">Психологический аспект организации исследовательской деятельности. Психологические особенности учащихся 8–12 лет</p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
+            </li>
+          </ul>
+        </div>
+        <p class="pair-break"><span>Перерыв · 15 мин</span></p>
+        <div class="pair">
+          <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
+          <ul class="sessions">
+            <li class="session">
+              <p class="session__title">Психологический аспект исследовательской деятельности <span class="tag tag--cont">продолжение</span></p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section class="day" id="day-5" data-iso="2026-07-14" aria-labelledby="day-5-title">
+        <header class="day__head">
+          <h2 class="day__title" id="day-5-title">Вторник, 14 июля</h2>
+          <p class="day__meta"><span class="day__window">17:30–20:00</span><span class="day__status" hidden></span></p>
+        </header>
+        <div class="pair">
+          <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+          <ul class="sessions">
+            <li class="session">
+              <p class="session__title">Исследовательские математические задачи (и не только)</p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
+            </li>
+          </ul>
+        </div>
+        <p class="pair-break"><span>Перерыв · 15 мин</span></p>
+        <div class="pair">
+          <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
+          <ul class="sessions">
+            <li class="session">
+              <p class="session__title">Исследовательские математические задачи <span class="tag tag--cont">продолжение</span></p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section class="day" id="day-6" data-iso="2026-07-16" aria-labelledby="day-6-title">
+        <header class="day__head">
+          <h2 class="day__title" id="day-6-title">Четверг, 16 июля</h2>
+          <p class="day__meta"><span class="day__window">17:30–20:00</span><span class="day__status" hidden></span></p>
+        </header>
+        <div class="pair">
+          <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+          <ul class="sessions">
+            <li class="session">
+              <p class="session__title">Учитель и его роль в школе. Педагог и стимул. Стейкхолдеры учебного процесса. Эволюция роли учителя. Профессиональные требования к учителю. Выбор содержания образования. Работа с учебными материалами.</p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-ilya" aria-label="Подробнее: Илья Заславский">Илья Заславский</button></p>
+            </li>
+            <li class="session">
+              <p class="session__title">Технологии и отвага</p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-vlad" aria-label="Подробнее: Влад Степанов">Влад Степанов</button></p>
+            </li>
+          </ul>
+        </div>
+        <p class="pair-break"><span>Перерыв · 15 мин</span></p>
+        <div class="pair">
+          <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
+          <ul class="sessions">
+            <li class="session">
+              <p class="session__title">Общая рефлексия</p>
+              <p class="session__by"><button class="speaker" type="button" popovertarget="spk-vlad" aria-label="Подробнее: Влад Степанов">Влад Степанов</button></p>
+            </li>
+          </ul>
+        </div>
+      </section>
       </div>
     </div>
   </main>
@@ -651,21 +561,18 @@
       }
       var today = todayISO();
 
-      // Focus the current day, the next upcoming one, or (after the programme) the last.
+      // Current day, the next upcoming one, or (after the programme) the last.
       var focus = null;
       for (var i = 0; i < DAYS.length; i++) {
         if (DAYS[i].iso >= today) { focus = DAYS[i]; break; }
       }
       if (!focus) focus = DAYS[DAYS.length - 1];
 
-      var radio = document.getElementById("day-" + focus.idx);
-      if (radio) radio.checked = true;
-
-      // Per-day status badge.
+      // Per-day status badges.
       DAYS.forEach(function (dd) {
-        var panel = document.querySelector('.day[data-day="' + dd.idx + '"]');
-        if (!panel) return;
-        var badge = panel.querySelector(".day__status");
+        var sec = document.getElementById("day-" + dd.idx);
+        if (!sec) return;
+        var badge = sec.querySelector(".day__status");
         if (!badge) return;
         var label, cls;
         if (dd.iso === today) { label = "Сегодня"; cls = "is-today"; }
@@ -676,10 +583,19 @@
         badge.hidden = false;
       });
 
-      // Bring the active tab into view inside the horizontal scroller.
-      var tab = document.querySelector('.day-tab[for="day-' + focus.idx + '"]');
-      if (tab && tab.scrollIntoView) {
-        try { tab.scrollIntoView({ inline: "center", block: "nearest" }); } catch (e) {}
+      var cur = document.getElementById("day-" + focus.idx);
+      if (cur) cur.classList.add("is-current");
+
+      // Match the sticky offset to the real header height.
+      var sh = document.querySelector(".site-header");
+      var hh = sh ? sh.offsetHeight : 64;
+      document.documentElement.style.setProperty("--site-h", hh + "px");
+
+      // Autoscroll to the current day — but not when it's the first one,
+      // so the intro (with the venue link) stays visible before the programme starts.
+      if (cur && focus.idx > 0) {
+        var y = cur.getBoundingClientRect().top + window.pageYOffset - hh - 6;
+        if (y > 0) window.scrollTo({ top: y, behavior: "auto" });
       }
     })();
   </script>
