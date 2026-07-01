@@ -54,25 +54,12 @@
 
     .schedule { padding-bottom: clamp(3rem, 8vw, 5rem); }
 
-    /* Week separator */
-    .week-label {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--accent);
-      margin: 2rem 0 0.75rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--rule);
-    }
-    .week-label:first-child { margin-top: 0.5rem; }
-
     /* All days are visible; each day's header sticks while its day is in view */
     .day {
       display: block;
       scroll-margin-top: var(--site-h);
-      padding-bottom: 1.75rem;
-      margin-bottom: 1.75rem;
+      padding-bottom: 2rem;
+      margin-bottom: 2rem;
     }
     .day:last-child { margin-bottom: 0; padding-bottom: 0; }
 
@@ -80,14 +67,9 @@
       position: sticky;
       top: var(--site-h);
       z-index: 5;
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.25rem 1rem;
-      padding: 0.75rem 0;
-      margin-bottom: 1rem;
       background: var(--bg);
+      padding: 0.85rem 0 0.7rem;
+      margin-bottom: 1rem;
       border-bottom: 1px solid var(--rule);
     }
     .day.is-current .day__head {
@@ -96,57 +78,22 @@
       margin-left: -0.85rem;
     }
     .day__title {
-      font-size: clamp(1.375rem, 1.15rem + 1.1vw, 1.875rem);
-      line-height: 1.15;
-      margin: 0;
-    }
-    .day__meta {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin: 0;
-    }
-    .day__window {
-      font-family: var(--font-mono);
-      font-size: 0.875rem;
-      letter-spacing: 0.02em;
-      color: var(--ink-muted);
-    }
-    .day__status {
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 0.15rem 0.55rem;
-      border-radius: 999px;
-      border: 1px solid currentColor;
-      white-space: nowrap;
-    }
-    .day__status.is-today { color: var(--accent); background: var(--accent-soft); border-color: transparent; }
-    .day__status.is-upcoming { color: var(--accent); }
-    .day__status.is-past { color: var(--ink-muted); opacity: 0.7; }
-
-    /* Pairs + sessions */
-    .pair { margin: 0; }
-    .pair__head {
-      display: flex;
-      align-items: baseline;
-      gap: 0.75rem;
-      margin: 0 0 0.5rem;
-    }
-    .pair__label {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--ink-muted);
-    }
-    .pair__time {
       font-family: var(--font-serif);
-      font-size: 1.0625rem;
+      font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2rem);
       font-weight: 500;
-      color: var(--ink);
+      line-height: 1.1;
+      margin: 0 0 0.15rem;
     }
+    .day__time {
+      font-family: var(--font-mono);
+      font-size: clamp(1.125rem, 1rem + 0.7vw, 1.4375rem);
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: var(--accent);
+      margin: 0;
+    }
+
+    /* Sessions */
     .sessions {
       list-style: none;
       margin: 0;
@@ -281,7 +228,6 @@
     }
 
     @media (max-width: 480px) {
-      .day__head { flex-direction: column; align-items: flex-start; gap: 0.35rem; }
       .session__title { font-size: 1rem; }
     }
   </style>
@@ -319,14 +265,11 @@
       </section>
 
       <div class="schedule">
-      <p class="week-label">Неделя 1</p>
-      <section class="day" id="day-0" data-iso="2026-07-06" aria-labelledby="day-0-title">
-        <header class="day__head">
-          <h2 class="day__title" id="day-0-title">Понедельник, 6 июля</h2>
-          <p class="day__meta"><span class="day__window">17:30–20:00</span><span class="day__status" hidden></span></p>
-        </header>
-        <div class="pair">
-          <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+        <section class="day" id="day-0" data-iso="2026-07-06" aria-labelledby="day-0-title">
+          <header class="day__head">
+            <h2 class="day__title" id="day-0-title">Понедельник, 6 июля</h2>
+            <p class="day__time">17:30–20:00</p>
+          </header>
           <ul class="sessions">
             <li class="session">
               <p class="session__title">Вводное занятие. Цели курса, знакомство с участниками</p>
@@ -337,10 +280,7 @@
               <p class="session__by"><button class="speaker" type="button" popovertarget="spk-ilya" aria-label="Подробнее: Илья Заславский">Илья Заславский</button></p>
             </li>
           </ul>
-        </div>
-        <p class="pair-break"><span>Перерыв · 15 мин</span></p>
-        <div class="pair">
-          <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
+          <p class="pair-break"><span>Перерыв · 15 мин</span></p>
           <ul class="sessions">
             <li class="session">
               <p class="session__title">Школа как общественный институт <span class="tag tag--cont">продолжение</span></p>
@@ -351,91 +291,69 @@
               <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
             </li>
           </ul>
-        </div>
-      </section>
-      <section class="day" id="day-1" data-iso="2026-07-08" aria-labelledby="day-1-title">
-        <header class="day__head">
-          <h2 class="day__title" id="day-1-title">Среда, 8 июля</h2>
-          <p class="day__meta"><span class="day__window">17:30–20:00</span><span class="day__status" hidden></span></p>
-        </header>
-        <div class="pair">
-          <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+        </section>
+        <section class="day" id="day-1" data-iso="2026-07-08" aria-labelledby="day-1-title">
+          <header class="day__head">
+            <h2 class="day__title" id="day-1-title">Среда, 8 июля</h2>
+            <p class="day__time">17:30–20:00</p>
+          </header>
           <ul class="sessions">
             <li class="session">
               <p class="session__title">Математика. Исследование</p>
               <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
             </li>
           </ul>
-        </div>
-        <p class="pair-break"><span>Перерыв · 15 мин</span></p>
-        <div class="pair">
-          <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
+          <p class="pair-break"><span>Перерыв · 15 мин</span></p>
           <ul class="sessions">
             <li class="session">
               <p class="session__title">Математика. Рефлексия и обсуждение</p>
               <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
             </li>
           </ul>
-        </div>
-      </section>
-      <section class="day" id="day-2" data-iso="2026-07-09" aria-labelledby="day-2-title">
-        <header class="day__head">
-          <h2 class="day__title" id="day-2-title">Четверг, 9 июля</h2>
-          <p class="day__meta"><span class="day__window">17:30–20:00</span><span class="day__status" hidden></span></p>
-        </header>
-        <div class="pair">
-          <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+        </section>
+        <section class="day" id="day-2" data-iso="2026-07-09" aria-labelledby="day-2-title">
+          <header class="day__head">
+            <h2 class="day__title" id="day-2-title">Четверг, 9 июля</h2>
+            <p class="day__time">17:30–20:00</p>
+          </header>
           <ul class="sessions">
             <li class="session">
               <p class="session__title">Биология. Исследование</p>
               <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
             </li>
           </ul>
-        </div>
-        <p class="pair-break"><span>Перерыв · 15 мин</span></p>
-        <div class="pair">
-          <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
+          <p class="pair-break"><span>Перерыв · 15 мин</span></p>
           <ul class="sessions">
             <li class="session">
               <p class="session__title">Биология. Рефлексия и обсуждение</p>
               <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
             </li>
           </ul>
-        </div>
-      </section>
-      <section class="day" id="day-3" data-iso="2026-07-11" aria-labelledby="day-3-title">
-        <header class="day__head">
-          <h2 class="day__title" id="day-3-title">Суббота, 11 июля</h2>
-          <p class="day__meta"><span class="day__window">12:30–15:00</span><span class="day__status" hidden></span></p>
-        </header>
-        <div class="pair">
-          <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">12:30–14:00</span></p>
+        </section>
+        <section class="day" id="day-3" data-iso="2026-07-11" aria-labelledby="day-3-title">
+          <header class="day__head">
+            <h2 class="day__title" id="day-3-title">Суббота, 11 июля</h2>
+            <p class="day__time">12:30–15:00</p>
+          </header>
           <ul class="sessions">
             <li class="session">
               <p class="session__title">Лингвистика. Исследование</p>
               <p class="session__by"><button class="speaker" type="button" popovertarget="spk-boris" aria-label="Подробнее: Борис Иомдин">Борис Иомдин</button></p>
             </li>
           </ul>
-        </div>
-        <p class="pair-break"><span>Перерыв · 15 мин</span></p>
-        <div class="pair">
-          <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">14:15–15:00</span></p>
+          <p class="pair-break"><span>Перерыв · 15 мин</span></p>
           <ul class="sessions">
             <li class="session">
               <p class="session__title">Лингвистика. Рефлексия и обсуждение</p>
               <p class="session__by"><button class="speaker" type="button" popovertarget="spk-boris" aria-label="Подробнее: Борис Иомдин">Борис Иомдин</button></p>
             </li>
           </ul>
-        </div>
-      </section>
-      <p class="week-label">Неделя 2</p>
-      <section class="day" id="day-4" data-iso="2026-07-13" aria-labelledby="day-4-title">
-        <header class="day__head">
-          <h2 class="day__title" id="day-4-title">Понедельник, 13 июля</h2>
-          <p class="day__meta"><span class="day__window">17:30–20:00</span><span class="day__status" hidden></span></p>
-        </header>
-        <div class="pair">
-          <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+        </section>
+        <section class="day" id="day-4" data-iso="2026-07-13" aria-labelledby="day-4-title">
+          <header class="day__head">
+            <h2 class="day__title" id="day-4-title">Понедельник, 13 июля</h2>
+            <p class="day__time">17:30–20:00</p>
+          </header>
           <ul class="sessions">
             <li class="session">
               <p class="session__title">Ученик как субъект учебного процесса. Субъект-субъектный подход к обучению. Современные вызовы школьного образования. Учебная деятельность.</p>
@@ -446,50 +364,38 @@
               <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
             </li>
           </ul>
-        </div>
-        <p class="pair-break"><span>Перерыв · 15 мин</span></p>
-        <div class="pair">
-          <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
+          <p class="pair-break"><span>Перерыв · 15 мин</span></p>
           <ul class="sessions">
             <li class="session">
               <p class="session__title">Психологический аспект исследовательской деятельности <span class="tag tag--cont">продолжение</span></p>
               <p class="session__by"><button class="speaker" type="button" popovertarget="spk-anton" aria-label="Подробнее: Антон Захаров">Антон Захаров</button></p>
             </li>
           </ul>
-        </div>
-      </section>
-      <section class="day" id="day-5" data-iso="2026-07-14" aria-labelledby="day-5-title">
-        <header class="day__head">
-          <h2 class="day__title" id="day-5-title">Вторник, 14 июля</h2>
-          <p class="day__meta"><span class="day__window">17:30–20:00</span><span class="day__status" hidden></span></p>
-        </header>
-        <div class="pair">
-          <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+        </section>
+        <section class="day" id="day-5" data-iso="2026-07-14" aria-labelledby="day-5-title">
+          <header class="day__head">
+            <h2 class="day__title" id="day-5-title">Вторник, 14 июля</h2>
+            <p class="day__time">17:30–20:00</p>
+          </header>
           <ul class="sessions">
             <li class="session">
               <p class="session__title">Исследовательские задачи (и не только)</p>
               <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
             </li>
           </ul>
-        </div>
-        <p class="pair-break"><span>Перерыв · 15 мин</span></p>
-        <div class="pair">
-          <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
+          <p class="pair-break"><span>Перерыв · 15 мин</span></p>
           <ul class="sessions">
             <li class="session">
               <p class="session__title">Исследовательские задачи <span class="tag tag--cont">продолжение</span></p>
               <p class="session__by"><button class="speaker" type="button" popovertarget="spk-yura" aria-label="Подробнее: Юрий Подкопаев">Юрий Подкопаев</button></p>
             </li>
           </ul>
-        </div>
-      </section>
-      <section class="day" id="day-6" data-iso="2026-07-16" aria-labelledby="day-6-title">
-        <header class="day__head">
-          <h2 class="day__title" id="day-6-title">Четверг, 16 июля</h2>
-          <p class="day__meta"><span class="day__window">17:30–20:00</span><span class="day__status" hidden></span></p>
-        </header>
-        <div class="pair">
-          <p class="pair__head"><span class="pair__label">Часть 1</span><span class="pair__time">17:30–19:00</span></p>
+        </section>
+        <section class="day" id="day-6" data-iso="2026-07-16" aria-labelledby="day-6-title">
+          <header class="day__head">
+            <h2 class="day__title" id="day-6-title">Четверг, 16 июля</h2>
+            <p class="day__time">17:30–20:00</p>
+          </header>
           <ul class="sessions">
             <li class="session">
               <p class="session__title">Учитель и его роль в школе. Педагог и стимул. Стейкхолдеры учебного процесса. Эволюция роли учителя. Профессиональные требования к учителю. Выбор содержания образования. Работа с учебными материалами.</p>
@@ -500,18 +406,14 @@
               <p class="session__by"><button class="speaker" type="button" popovertarget="spk-vlad" aria-label="Подробнее: Влад Степанов">Влад Степанов</button></p>
             </li>
           </ul>
-        </div>
-        <p class="pair-break"><span>Перерыв · 15 мин</span></p>
-        <div class="pair">
-          <p class="pair__head"><span class="pair__label">Часть 2</span><span class="pair__time">19:15–20:00</span></p>
+          <p class="pair-break"><span>Перерыв · 15 мин</span></p>
           <ul class="sessions">
             <li class="session">
               <p class="session__title">Общая рефлексия</p>
               <p class="session__by"><button class="speaker" type="button" popovertarget="spk-vlad" aria-label="Подробнее: Влад Степанов">Влад Степанов</button></p>
             </li>
           </ul>
-        </div>
-      </section>
+        </section>
       </div>
     </div>
   </main>
@@ -582,21 +484,9 @@
       }
       if (!focus) focus = DAYS[DAYS.length - 1];
 
-      // Mark the current day and show a status badge on it only.
+      // Highlight the current day.
       var cur = document.getElementById("day-" + focus.idx);
-      if (cur) {
-        cur.classList.add("is-current");
-        var badge = cur.querySelector(".day__status");
-        if (badge) {
-          var label, cls;
-          if (focus.iso === today) { label = "Сегодня"; cls = "is-today"; }
-          else if (focus.iso > today) { label = "Скоро"; cls = "is-upcoming"; }
-          else { label = "Завершено"; cls = "is-past"; }
-          badge.textContent = label;
-          badge.className = "day__status " + cls;
-          badge.hidden = false;
-        }
-      }
+      if (cur) cur.classList.add("is-current");
 
       // Match the sticky offset to the real header height.
       var sh = document.querySelector(".site-header");
